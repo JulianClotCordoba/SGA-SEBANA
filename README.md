@@ -40,8 +40,22 @@ SGA-SEBANA/
 ├── login.html      → Inicio de sesión
 ├── table.html      → Gestión de tablas
 ├── form.html       → Formularios
-└── ...
+├── README.md       → Este archivo (documentación principal)
+└── BRANCH.md       → Guía de trabajo con ramas (branches)
 ```
+
+---
+
+## Equipo de Desarrollo
+
+Este proyecto es desarrollado por:
+
+- **Julián Clot Córdoba** (1-1926-0815) - Rama: `julian-clot`
+- **Joel Josué Peralta Pérez** (1-1922-0621) - Rama: `joel-peralta`
+- **Derlis Hernández Carranza** (7-0200-0717) - Rama: `derlis-hernandez`
+- **Jorge Luis Castrillo Molina** (2-0872-0752) - Rama: `jorge-castrillo`
+
+Cada integrante trabaja en su propia rama (branch) y debe seguir las instrucciones detalladas en **BRANCH.md**.
 
 ---
 
@@ -149,7 +163,7 @@ git clone https://github.com/juanperez/SGA-SEBANA.git
 4. O simplemente abre el Explorador de archivos y navega a `C:\xampp\htdocs\SGA-SEBANA`
 5. Dentro deberías ver todas las carpetas y archivos del proyecto:
    - Carpetas: `css`, `js`, `vendor`, `images`, `fonts`
-   - Archivos: `index.html`, `login.html`, `table.html`, `form.html`, etc.
+   - Archivos: `index.html`, `login.html`, `table.html`, `form.html`, `README.md`, `BRANCH.md`, etc.
 
 **¿Por qué clonar en lugar de descargar?**
 
@@ -159,8 +173,91 @@ Al clonar el proyecto con Git:
 - Puedes subir tus cambios con `git push`
 - Trabajas con control de versiones (puedes volver a versiones anteriores si algo sale mal)
 - Colaboras con otras personas en el mismo proyecto
+- **Puedes trabajar en tu propia rama (branch) sin afectar el código principal**
 
-### Paso 5: Iniciar Apache en XAMPP
+### Paso 5: Configurar tu rama de trabajo
+
+**MUY IMPORTANTE**: Cada integrante del equipo debe trabajar en su propia rama (branch). **NUNCA trabajes directamente en la rama `main`**.
+
+1. Navega al proyecto en la terminal (si no estás allí):
+```bash
+cd C:\xampp\htdocs\SGA-SEBANA
+```
+
+2. Verifica en qué rama estás:
+```bash
+git branch
+```
+
+Probablemente verás:
+```
+* main
+```
+
+3. Descarga la información de todas las ramas desde GitHub:
+```bash
+git fetch origin
+```
+
+4. Cambia a tu rama personal según tu nombre:
+
+**Para Julián Clot Córdoba**:
+```bash
+git checkout julian-clot
+```
+
+**Para Joel Josué Peralta Pérez**:
+```bash
+git checkout joel-peralta
+```
+
+**Para Derlis Hernández Carranza**:
+```bash
+git checkout derlis-hernandez
+```
+
+**Para Jorge Luis Castrillo Molina**:
+```bash
+git checkout jorge-castrillo
+```
+
+5. Si tu rama no existe aún, créala con:
+```bash
+git checkout -b tu-nombre-de-rama
+```
+
+Por ejemplo:
+```bash
+git checkout -b julian-clot
+```
+
+6. Sube tu rama a GitHub (solo la primera vez):
+```bash
+git push -u origin tu-nombre-de-rama
+```
+
+Por ejemplo:
+```bash
+git push -u origin julian-clot
+```
+
+**Para más detalles sobre cómo trabajar con ramas, consulta el archivo BRANCH.md que contiene una guía completa y detallada.**
+
+### Paso 6: Configurar Git con tu información
+
+Antes de hacer commits, debes configurar tu nombre y correo (solo se hace una vez):
+```bash
+git config --global user.name "Tu Nombre Completo"
+git config --global user.email "tuemail@ejemplo.com"
+```
+
+**Ejemplo para Julián**:
+```bash
+git config --global user.name "Julián Clot Córdoba"
+git config --global user.email "julian.clot@ejemplo.com"
+```
+
+### Paso 7: Iniciar Apache en XAMPP
 
 1. Busca **XAMPP Control Panel** en tu menú de inicio de Windows
 2. Haz clic derecho sobre él y selecciona **Ejecutar como administrador**
@@ -171,7 +268,7 @@ Al clonar el proyecto con Git:
 
 **Nota**: Si Apache no inicia y muestra un error de puerto, probablemente otro programa esté usando el puerto 80. Ve a la sección de **Solución de problemas** más abajo.
 
-### Paso 6: Abrir el proyecto en el navegador
+### Paso 8: Abrir el proyecto en el navegador
 
 1. Asegúrate de que Apache esté corriendo (luz verde en XAMPP Control Panel)
 2. Abre tu navegador web (Chrome, Firefox, Edge, etc.)
@@ -184,31 +281,6 @@ Al clonar el proyecto con Git:
 - `http://localhost/SGA-SEBANA/login.html` (para ver la página de login)
 - `http://localhost/SGA-SEBANA/table.html` (para ver las tablas)
 - `http://localhost/SGA-SEBANA/form.html` (para ver los formularios)
-
----
-
-## Configurar Git por primera vez
-
-Antes de hacer commits, debes configurar tu nombre y correo electrónico (solo se hace una vez):
-
-1. Abre la terminal (cmd)
-2. Escribe estos comandos (reemplaza con tus datos reales):
-```bash
-git config --global user.name "Tu Nombre Completo"
-```
-```bash
-git config --global user.email "tuemail@ejemplo.com"
-```
-
-**Ejemplo**:
-```bash
-git config --global user.name "Juan Pérez"
-git config --global user.email "juan.perez@gmail.com"
-```
-
-3. Presiona **Enter** después de cada comando
-
-**Nota**: Este nombre y correo aparecerán en todos tus commits. Usa el mismo correo que tienes registrado en tu cuenta de GitHub.
 
 ---
 
@@ -231,13 +303,18 @@ git config --global user.email "juan.perez@gmail.com"
 
 6. Ahora puedes ver todos los archivos del proyecto en el panel izquierdo
 
-7. Haz clic en cualquier archivo para editarlo (por ejemplo, `index.html`)
+7. **IMPORTANTE**: Antes de editar, asegúrate de estar en tu rama personal:
+   - Abre la terminal integrada en Visual Studio Code (Ctrl + Ñ o View → Terminal)
+   - Escribe: `git branch`
+   - Debes ver un asterisco (*) junto al nombre de tu rama, NO junto a `main`
 
-8. Realiza los cambios que necesites
+8. Haz clic en cualquier archivo para editarlo (por ejemplo, `index.html`)
 
-9. Guarda los cambios presionando **Ctrl + S**
+9. Realiza los cambios que necesites
 
-10. Recarga la página en tu navegador (F5) para ver los cambios
+10. Guarda los cambios presionando **Ctrl + S**
+
+11. Recarga la página en tu navegador (F5) para ver los cambios
 
 ### Cómo ver los cambios en tiempo real
 
@@ -257,211 +334,97 @@ Para trabajar eficientemente, mantén estas ventanas abiertas simultáneamente:
 
 ---
 
-## Comandos básicos de Git para trabajo diario
+## Flujo de trabajo con Git y Branches
 
-Una vez que hayas clonado el proyecto, usarás estos comandos constantemente para trabajar con control de versiones.
+**IMPORTANTE**: Este proyecto usa ramas (branches) de Git para que cada integrante trabaje de forma independiente.
 
-### 1. Ver el estado de tus archivos
+### Reglas fundamentales:
 
-Este comando te muestra qué archivos has modificado, agregado o eliminado:
+1. **NUNCA trabajes directamente en la rama `main`**
+2. Siempre trabaja en tu rama personal (`julian-clot`, `joel-peralta`, `derlis-hernandez` o `jorge-castrillo`)
+3. Actualiza tu rama con `main` todos los días antes de trabajar
+4. Haz commits frecuentes con mensajes descriptivos
+5. Sube tus cambios a GitHub regularmente
+
+### Rutina diaria básica:
 ```bash
-git status
-```
-
-**Qué verás**:
-- **Archivos en rojo**: archivos modificados que no has agregado al área de preparación
-- **Archivos en verde**: archivos listos para hacer commit
-- **Untracked files**: archivos nuevos que Git aún no está rastreando
-
-**Cuándo usarlo**: Úsalo frecuentemente para saber en qué estado está tu proyecto.
-
-### 2. Agregar archivos al área de preparación
-
-Antes de guardar cambios (commit), debes agregar los archivos modificados:
-
-**Agregar un archivo específico**:
-```bash
-git add index.html
-```
-
-**Agregar todos los archivos modificados** (lo más común):
-```bash
-git add .
-```
-
-El punto `.` significa "todos los archivos modificados en el directorio actual y subdirectorios".
-
-**Cuándo usarlo**: Después de hacer cambios y antes de hacer commit.
-
-### 3. Hacer un commit (guardar cambios localmente)
-
-Un commit es como tomar una "fotografía" del estado actual de tu proyecto:
-```bash
-git commit -m "Descripción clara y breve de los cambios"
-```
-
-**Ejemplos de buenos mensajes de commit**:
-```bash
-git commit -m "Agregado formulario de registro de usuarios"
-git commit -m "Corregido error en tabla de productos"
-git commit -m "Actualizado diseño del dashboard principal"
-git commit -m "Implementadas gráficas en el panel de estadísticas"
-```
-
-**Malas prácticas** (evita estos mensajes):
-```bash
-git commit -m "cambios"
-git commit -m "fix"
-git commit -m "asdf"
-git commit -m "actualizacion"
-```
-
-**Cuándo usarlo**: Cada vez que completes una funcionalidad o arregles algo específico.
-
-### 4. Subir cambios al repositorio remoto (GitHub)
-
-Una vez que hayas hecho uno o varios commits localmente, súbelos a GitHub:
-```bash
-git push origin main
-```
-
-**Nota**: Algunos repositorios antiguos usan `master` en lugar de `main`. Si recibes un error, intenta:
-```bash
-git push origin master
-```
-
-**Qué hace**: Sube todos los commits que has hecho localmente al repositorio en GitHub.
-
-**Cuándo usarlo**: Al final de tu sesión de trabajo o cuando quieras respaldar tus cambios en la nube.
-
-### 5. Descargar cambios del repositorio remoto
-
-Si otras personas han hecho cambios en GitHub, o si tú trabajaste desde otra computadora, descarga los últimos cambios:
-```bash
-git pull origin main
-```
-
-**Qué hace**: Descarga los commits más recientes del repositorio de GitHub y los fusiona con tu código local.
-
-**Cuándo usarlo**: Al inicio de cada sesión de trabajo, antes de empezar a editar archivos.
-
----
-
-## Flujo de trabajo completo (rutina diaria)
-
-Este es el proceso que seguirás **cada vez** que trabajes en el proyecto:
-
-### Al comenzar tu sesión de trabajo:
-
-1. **Abre la terminal** y navega al proyecto:
-```bash
+# 1. Navegar al proyecto
 cd C:\xampp\htdocs\SGA-SEBANA
-```
 
-2. **Descarga los últimos cambios** del repositorio (por si alguien más actualizó el proyecto):
-```bash
+# 2. Verificar que estás en tu rama
+git branch
+
+# 3. Actualizar la rama main
+git checkout main
 git pull origin main
+
+# 4. Volver a tu rama
+git checkout tu-nombre-de-rama
+
+# 5. Fusionar cambios de main en tu rama
+git merge main
+
+# 6. Trabajar en tus archivos...
+
+# 7. Guardar cambios
+git add .
+git commit -m "Descripción clara de los cambios"
+
+# 8. Subir a GitHub
+git push origin tu-nombre-de-rama
 ```
 
-3. **Inicia Apache** en XAMPP Control Panel
+**Para una guía completa y detallada sobre cómo trabajar con branches, resolver conflictos, y más, consulta el archivo `BRANCH.md`.**
 
-4. **Abre el proyecto** en tu editor de código (Visual Studio Code)
+---
 
-5. **Abre el proyecto en el navegador**: `http://localhost/SGA-SEBANA/`
+## Comandos de Git más usados
 
-### Durante tu trabajo:
+### Ver en qué rama estás:
+```bash
+git branch
+```
 
-6. **Haz las modificaciones** que necesites en los archivos
+### Cambiar a tu rama:
+```bash
+git checkout tu-nombre-de-rama
+```
 
-7. **Guarda los archivos** (Ctrl + S)
-
-8. **Recarga el navegador** (F5) para ver los cambios
-
-9. Repite los pasos 6-8 tantas veces como necesites
-
-### Al terminar tu sesión de trabajo:
-
-10. **Verifica qué archivos cambiaron**:
+### Ver qué archivos modificaste:
 ```bash
 git status
 ```
 
-11. **Agrega los archivos modificados**:
+### Guardar cambios:
 ```bash
 git add .
+git commit -m "Descripción de cambios"
+git push origin tu-nombre-de-rama
 ```
 
-12. **Haz un commit con un mensaje descriptivo**:
-```bash
-git commit -m "Descripción clara de lo que hiciste"
-```
-
-Por ejemplo:
-```bash
-git commit -m "Agregada página de perfil de usuario"
-```
-
-13. **Sube los cambios a GitHub**:
-```bash
-git push origin main
-```
-
-14. **Cierra Apache** en XAMPP Control Panel (botón Stop)
-
-15. **Cierra tu editor de código**
-
----
-
-## Comandos de Git adicionales (útiles)
-
-### Ver el historial de commits
-```bash
-git log
-```
-
-Esto muestra todos los commits realizados en el proyecto. Presiona `Q` para salir.
-
-**Versión más compacta**:
-```bash
-git log --oneline
-```
-
-### Ver diferencias en archivos modificados
-```bash
-git diff
-```
-
-Esto muestra exactamente qué líneas cambiaron en cada archivo.
-
-### Descartar cambios en un archivo específico
-
-Si modificaste un archivo pero quieres volver a la versión anterior:
-```bash
-git checkout -- nombre-archivo.html
-```
-
-**Advertencia**: Esto borrará todos los cambios no guardados en ese archivo.
-
-### Crear una rama nueva (para trabajar en funcionalidades sin afectar el código principal)
-```bash
-git branch nombre-de-la-rama
-git checkout nombre-de-la-rama
-```
-
-O en un solo comando:
-```bash
-git checkout -b nombre-de-la-rama
-```
-
-**Ejemplo**:
-```bash
-git checkout -b feature-nuevo-login
-```
-
-### Volver a la rama principal
+### Actualizar tu rama con main:
 ```bash
 git checkout main
+git pull origin main
+git checkout tu-nombre-de-rama
+git merge main
 ```
+
+**Para más comandos y explicaciones detalladas, consulta `BRANCH.md`.**
+
+---
+
+## Estructura de ramas del proyecto
+```
+main (rama principal - código oficial)
+├── julian-clot (Julián Clot Córdoba)
+├── joel-peralta (Joel Josué Peralta Pérez)
+├── derlis-hernandez (Derlis Hernández Carranza)
+└── jorge-castrillo (Jorge Luis Castrillo Molina)
+```
+
+- **main**: Contiene el código oficial y estable. Solo se actualiza mediante Pull Requests revisados.
+- **Ramas personales**: Cada integrante trabaja en su rama y sube sus cambios sin afectar a los demás.
 
 ---
 
@@ -557,77 +520,42 @@ git checkout main
    - Si la carpeta no existe, Git no se instaló correctamente
    - Vuelve a instalar Git desde [https://git-scm.com/downloads](https://git-scm.com/downloads)
 
+### Estoy trabajando en la rama main por error
+
+**Problema**: Te diste cuenta de que estás haciendo cambios en `main` en lugar de tu rama personal.
+
+**Solución**:
+
+1. **Si NO has hecho commit aún**:
+```bash
+# Guarda tus cambios temporalmente
+git stash
+
+# Cambia a tu rama
+git checkout tu-nombre-de-rama
+
+# Recupera tus cambios en tu rama
+git stash pop
+```
+
+2. **Si YA hiciste commit en main**:
+```bash
+# Deshacer el último commit (mantiene los cambios)
+git reset --soft HEAD~1
+
+# Cambia a tu rama
+git checkout tu-nombre-de-rama
+
+# Ahora haz commit en tu rama
+git add .
+git commit -m "Descripción de cambios"
+```
+
 ### No puedo hacer push a GitHub (error de autenticación)
 
 **Problema**: Al ejecutar `git push` aparece un error de usuario/contraseña o autenticación.
 
-**Causa**: GitHub ya no permite usar contraseñas normales desde agosto de 2021. Debes usar un Personal Access Token (PAT).
-
-**Solución**:
-
-1. **Ve a GitHub.com** e inicia sesión
-
-2. **Haz clic en tu foto de perfil** (esquina superior derecha)
-
-3. Selecciona **Settings**
-
-4. En el menú lateral izquierdo, baja hasta **Developer settings**
-
-5. Haz clic en **Personal access tokens** → **Tokens (classic)**
-
-6. Haz clic en **Generate new token** → **Generate new token (classic)**
-
-7. **Configura el token**:
-   - **Note**: Escribe algo como "Token para SGA-SEBANA"
-   - **Expiration**: Selecciona "No expiration" o elige un tiempo
-   - **Select scopes**: Marca la casilla **repo** (esto incluye todos los permisos necesarios)
-
-8. Baja hasta el final y haz clic en **Generate token**
-
-9. **IMPORTANTE**: Copia el token que aparece (es una cadena larga de letras y números)
-   - Guárdalo en un lugar seguro (Bloc de notas, archivo de texto)
-   - **No podrás volver a verlo después de cerrar esta página**
-
-10. **Usa el token en lugar de tu contraseña**:
-    - Cuando Git te pida usuario: escribe tu usuario de GitHub
-    - Cuando Git te pida contraseña: **pega el token** (no tu contraseña normal)
-
-**Consejo**: Guarda el token en un lugar seguro. Lo necesitarás cada vez que hagas push (a menos que configures credenciales guardadas).
-
-### Error: "Your branch is behind"
-
-**Problema**: Al hacer `git push` aparece un mensaje como "Your branch is behind 'origin/main'".
-
-**Causa**: Alguien más (u otra computadora) subió cambios al repositorio que tú no tienes localmente.
-
-**Solución**:
-
-1. **Descarga los cambios primero**:
-```bash
-git pull origin main
-```
-
-2. **Si hay conflictos**, Git te lo dirá. Deberás resolverlos manualmente:
-   - Abre los archivos en conflicto en tu editor
-   - Busca las líneas que empiezan con `<<<<<<<`, `=======`, `>>>>>>>`
-   - Decide qué código conservar
-   - Elimina los marcadores de conflicto
-   - Guarda el archivo
-
-3. **Agrega los archivos resueltos**:
-```bash
-git add .
-```
-
-4. **Haz commit de la fusión**:
-```bash
-git commit -m "Resueltos conflictos de fusión"
-```
-
-5. **Sube los cambios**:
-```bash
-git push origin main
-```
+**Solución**: Consulta la sección "No puedo hacer push a GitHub" en `BRANCH.md` para instrucciones detalladas sobre cómo crear un Personal Access Token.
 
 ---
 
@@ -654,6 +582,12 @@ SGA-SEBANA busca servir como base sólida para un sistema administrativo, permit
 
 ---
 
+## Documentación adicional
+
+- **BRANCH.md**: Guía completa y detallada sobre cómo trabajar con ramas (branches), resolver conflictos, y flujo de trabajo diario con Git.
+
+---
+
 ## Recursos adicionales
 
 ### Documentación oficial
@@ -662,12 +596,6 @@ SGA-SEBANA busca servir como base sólida para un sistema administrativo, permit
 - **Git**: [https://git-scm.com/doc](https://git-scm.com/doc)
 - **GitHub**: [https://docs.github.com/](https://docs.github.com/)
 - **Bootstrap 5**: [https://getbootstrap.com/docs/5.0/getting-started/introduction/](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
-
-### Editores de código recomendados
-
-- **Visual Studio Code**: [https://code.visualstudio.com/](https://code.visualstudio.com/) (gratuito, muy recomendado)
-- **Sublime Text**: [https://www.sublimetext.com/](https://www.sublimetext.com/)
-- **Notepad++**: [https://notepad-plus-plus.org/](https://notepad-plus-plus.org/) (simple y ligero)
 
 ### Tutoriales útiles
 
