@@ -89,9 +89,11 @@
                         </div>
                     </div>
                     <div class="carnet-footer">
-                        <p>Emitido el: <?= date('d/m/Y') ?></p>
-                        <p>Código QR aquí</p>
-                    </div>
+    <p>Emitido el: <?= date('d/m/Y') ?></p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://sga-sebana.org/validar.php?id=<?= $afiliado->id ?>" 
+         alt="QR de validación">
+</div>
+
                 </div>
             </div>
         </div>
@@ -101,8 +103,7 @@
 
 
  <!-- Ajustamiento  de como se ve en cada dispositivo -->
-    <!-- Bootstrap JS -->
-    <script src="/SGA-SEBANA/public/assets/vendor/bootstrap-5.3.8.bundle.min.js"></script>
+ 
 
     <style>
 .carnet-container {
@@ -134,6 +135,10 @@
 }
 </style>
 
+
+
 </body>
+
+
 
 </html>

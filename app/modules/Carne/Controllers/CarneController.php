@@ -84,5 +84,35 @@ class CarneController extends ControllerBase {
             ]);
         }
 
+          
+     
 }
+    }
+     // Historia de usuario 3 , criterio 2 y3 
+    public function validarQr($afiliadoId) {
+    $afiliado = Afiliado::find($afiliadoId);
+
+    if ($afiliado) {
+        if ($afiliado->estado === 'inactivo') {
+            return $this->render('carne/error', [
+                'mensaje' => 'Afiliado inactivo. No válido para uso.'
+            ]);
+        }
+
+        return $this->render('carne/validar', [
+            'nombre' => $afiliado->nombre,
+            'cedula' => $afiliado->cedula,
+            'estado' => $afiliado->estado
+        ]);
+    } else {
+        return $this->render('carne/error', [
+            'mensaje' => 'Afiliado no encontrado.'
+        ]);
+    }
+}
+
+
+
+
+
 ?>

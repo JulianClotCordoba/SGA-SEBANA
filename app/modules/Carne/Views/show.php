@@ -1,8 +1,14 @@
 <div class="carnet-container">
-    <img src="<?php echo $afiliado['carnet_digital']; ?>"  
-     alt="Carné digital"  
-     id="carnet-img"  
-     class="carnet-img">
+    <img src="<?= $afiliado->carnet_digital ?>"  
+         alt="Carné digital"  
+         id="carnet-img"  
+         class="carnet-img">
+
+
+      <!-- QR de validación -->
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://sga-sebana.org/validar.php?id=<?= $afiliado->id ?>" 
+     alt="QR de validación">
+
 
 </div>
 
@@ -21,5 +27,13 @@
     contain: 'outside'
   });
   elem.parentElement.addEventListener('wheel', panzoom.zoomWithWheel);
+
+
+
 </script>
+
+   
+
+
+
 
