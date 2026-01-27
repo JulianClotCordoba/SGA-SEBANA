@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\junta_directiva\Models;
+namespace App\Modules\JuntaDirectiva\Models;
 use App\Core\ModelBase;
 
 class JuntaDirectivaModel extends ModelBase

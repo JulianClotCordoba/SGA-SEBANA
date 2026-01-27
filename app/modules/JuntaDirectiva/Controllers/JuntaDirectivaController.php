@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Modules\junta_directiva\Controllers;
-use App\Modules\junta_directiva\Models\JuntaDirectivaModel;
+namespace App\Modules\JuntaDirectiva\Controllers;
+use App\Modules\JuntaDirectiva\Models\JuntaDirectivaModel;
 
 class JuntaDirectivaController
 {
