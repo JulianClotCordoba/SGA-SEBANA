@@ -292,7 +292,6 @@ $cfg['Servers'][$i]['password'] = '';
 ```
 
 3. **DESPUÉS de esa configuración, AGREGA** (no reemplaces):
-4. 
 Cambia los valores que dicen solicitar al administrador por los datos de .env (sebanacr)
 
 ```php
