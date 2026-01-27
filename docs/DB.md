@@ -178,7 +178,6 @@ SGA-SEBANA/
 ├── .gitignore                        <-- Verificar que incluya .env
 ├── app/
 │   └── config/
-│       ├── database.php              <-- Selector de entorno
 │       ├── database.local.php        <-- Config base local
 │       └── database.remote.php       <-- Config base remota
 ├── tools/
