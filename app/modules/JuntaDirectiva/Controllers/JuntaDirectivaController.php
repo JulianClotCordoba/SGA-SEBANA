@@ -11,6 +11,6 @@ class JuntaDirectivaController
       $model = new JuntaDirectivaModel();
       $junta = $model->getJuntaDirectiva();
 
-      require BASE_PATH . '/app/modules/junta_directiva/View/index.php';
+      require BASE_PATH . '/app/modules/JuntaDirectiva/View/index.php';
    }
 }
