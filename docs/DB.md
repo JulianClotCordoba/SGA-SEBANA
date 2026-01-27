@@ -181,7 +181,7 @@ SGA-SEBANA/
 │       └── database.remote.php       <-- Config base remota
 ├── tools/
 │   ├── index.php                     <-- Menú de herramientas
-│   └── test_db_simple.php           <-- Test de conexión
+│   └── test_db.php           <-- Test de conexión
 └── public/
     └── index.php
 ```
@@ -406,7 +406,7 @@ El proyecto incluye una carpeta `tools/` con scripts útiles para desarrollo.
 SGA-SEBANA/
 └── tools/
     ├── index.php              <-- Menú principal de herramientas
-    ├── test_db_simple.php     <-- Test de conexión de BD
+    ├── test_db.php     <-- Test de conexión de BD
     └── migrate_html.php       <-- (deshabilitado)
 ```
 
