@@ -1,5 +1,5 @@
 <?php
 
-use App\Modules\junta_directiva\Controllers\JuntaDirectivaController;
+use App\Modules\JuntaDirectiva\Controllers\JuntaDirectivaController;
 
 $router->get('/junta', [JuntaDirectivaController::class, 'index']);
