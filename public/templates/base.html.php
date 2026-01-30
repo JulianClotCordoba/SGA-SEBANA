@@ -1,3 +1,14 @@
+<?php
+// Force login check - redirect to login if not authenticated
+use App\Modules\Users\Helpers\SecurityHelper;
+
+if (!SecurityHelper::isAuthenticated()) {
+    header('Location: /SGA-SEBANA/public/login');
+    exit;
+}
+
+$authUser = SecurityHelper::getAuthUser();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +26,8 @@
     <!-- Fontfaces CSS-->
     <link href="/SGA-SEBANA/public/assets/css/font-face.css" rel="stylesheet" media="all">
     <link href="/SGA-SEBANA/public/assets/vendor/fontawesome-7.1.0/css/all.min.css" rel="stylesheet" media="all">
-    <link href="/SGA-SEBANA/public/assets/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="/SGA-SEBANA/public/assets/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet"
+        media="all">
 
     <!-- Bootstrap CSS-->
     <link href="/SGA-SEBANA/public/assets/vendor/bootstrap-5.3.8.min.css" rel="stylesheet" media="all">
@@ -24,7 +36,8 @@
     <link href="/SGA-SEBANA/public/assets/css/aos.css" rel="stylesheet" media="all">
     <link href="/SGA-SEBANA/public/assets/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
     <link href="/SGA-SEBANA/public/assets/css/swiper-bundle-12.0.3.min.css" rel="stylesheet" media="all">
-    <link href="/SGA-SEBANA/public/assets/vendor/perfect-scrollbar/perfect-scrollbar-1.5.6.css" rel="stylesheet" media="all">
+    <link href="/SGA-SEBANA/public/assets/vendor/perfect-scrollbar/perfect-scrollbar-1.5.6.css" rel="stylesheet"
+        media="all">
 
     <!-- Main CSS-->
     <link href="/SGA-SEBANA/public/assets/css/theme.css" rel="stylesheet" media="all">
@@ -85,6 +98,21 @@
                             <a href="/SGA-SEBANA/public/afiliados">
                                 <i class="fas fa-users"></i>Afiliados</a>
                         </li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-user-shield"></i>Usuarios</a>
+                            <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                <li>
+                                    <a href="/SGA-SEBANA/public/users">Lista de Usuarios</a>
+                                </li>
+                                <li>
+                                    <a href="/SGA-SEBANA/public/users/create">Nuevo Usuario</a>
+                                </li>
+                                <li>
+                                    <a href="/SGA-SEBANA/public/bitacora">Bitácora</a>
+                                </li>
+                            </ul>
+                        </li>
                         <li>
                             <a href="/SGA-SEBANA/public/ui/chart">
                                 <i class="fas fa-chart-bar"></i>Charts</a>
@@ -104,21 +132,6 @@
                         <li>
                             <a href="/SGA-SEBANA/public/ui/map">
                                 <i class="fas fa-map-marker-alt"></i>Maps</a>
-                        </li>
-                        <li class="has-sub">
-                            <a class="js-arrow" href="#">
-                                <i class="fas fa-copy"></i>Pages</a>
-                            <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                <li>
-                                    <a href="/SGA-SEBANA/public/ui/login">Login</a>
-                                </li>
-                                <li>
-                                    <a href="/SGA-SEBANA/public/ui/register">Register</a>
-                                </li>
-                                <li>
-                                    <a href="/SGA-SEBANA/public/ui/forget-pass">Forget Password</a>
-                                </li>
-                            </ul>
                         </li>
                         <li class="has-sub">
                             <a class="js-arrow" href="#">
@@ -175,43 +188,43 @@
                             <div class="header-button">
                                 <div class="account-wrap">
                                     <div class="account-item clearfix js-item-menu">
-                                        <div class="image">
-                                            <img src="/SGA-SEBANA/public/assets/img/icon/avatar-01.jpg" alt="User" />
+                                        <div class="image"
+                                            style="display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #3b5998; border-radius: 50%;">
+                                            <i class="fas fa-user" style="color: white; font-size: 18px;"></i>
                                         </div>
                                         <div class="content">
-                                            <a class="js-acc-btn" href="#">User</a>
+                                            <a class="js-acc-btn"
+                                                href="#"><?= htmlspecialchars($authUser['username'] ?? 'Usuario') ?></a>
                                         </div>
                                         <div class="account-dropdown js-dropdown">
                                             <div class="info clearfix">
-                                                <div class="image">
-                                                    <a href="#">
-                                                        <img src="/SGA-SEBANA/public/assets/img/icon/avatar-01.jpg" alt="User" />
-                                                    </a>
+                                                <div class="image"
+                                                    style="display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background: #3b5998; border-radius: 50%;">
+                                                    <i class="fas fa-user" style="color: white; font-size: 24px;"></i>
                                                 </div>
                                                 <div class="content">
                                                     <h5 class="name">
-                                                        <a href="#">User Name</a>
+                                                        <a
+                                                            href="#"><?= htmlspecialchars($authUser['nombre_completo'] ?? 'Usuario') ?></a>
                                                     </h5>
-                                                    <span class="email">user@example.com</span>
+                                                    <span
+                                                        class="email"><?= htmlspecialchars($authUser['email'] ?? '') ?></span>
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__body">
                                                 <div class="account-dropdown__item">
-                                                    <a href="#">
-                                                        <i class="zmdi zmdi-account"></i>Account</a>
+                                                    <a href="/SGA-SEBANA/public/users/<?= $authUser['id'] ?? 0 ?>/edit">
+                                                        <i class="zmdi zmdi-account"></i>Mi Cuenta</a>
                                                 </div>
                                                 <div class="account-dropdown__item">
-                                                    <a href="#">
-                                                        <i class="zmdi zmdi-settings"></i>Setting</a>
-                                                </div>
-                                                <div class="account-dropdown__item">
-                                                    <a href="#">
-                                                        <i class="zmdi zmdi-money-box"></i>Billing</a>
+                                                    <span class="text-muted px-3">
+                                                        <i
+                                                            class="zmdi zmdi-shield-check"></i><?= htmlspecialchars($authUser['rol_nombre'] ?? 'Sin rol') ?></span>
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__footer">
-                                                <a href="/SGA-SEBANA/logout">
-                                                    <i class="zmdi zmdi-power"></i>Logout</a>
+                                                <a href="/SGA-SEBANA/public/logout">
+                                                    <i class="zmdi zmdi-power"></i>Cerrar Sesión</a>
                                             </div>
                                         </div>
                                     </div>
@@ -232,16 +245,16 @@
                 </div>
             </div>
             <!-- END MAIN CONTENT-->
-            
+
         </div>
     </div>
 
     <!-- Jquery JS-->
     <script src="/SGA-SEBANA/public/assets/js/vanilla-utils.js"></script>
-    
+
     <!-- Bootstrap JS-->
     <script src="/SGA-SEBANA/public/assets/vendor/bootstrap-5.3.8.bundle.min.js"></script>
-    
+
     <!-- Vendor JS -->
     <script src="/SGA-SEBANA/public/assets/vendor/perfect-scrollbar/perfect-scrollbar-1.5.6.min.js"></script>
     <script src="/SGA-SEBANA/public/assets/vendor/chartjs/chart.umd.js-4.5.1.min.js"></script>

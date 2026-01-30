@@ -11,10 +11,28 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// DEBUGGING: Enable error reporting
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Start session (required for authentication)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Load .env file
+$envFile = BASE_PATH . '/.env';
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), '#') === 0) {
+            continue;
+        }
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+            $_ENV[$key] = $value;
+            putenv("$key=$value");
+        }
+    }
+}
 
 // Autoloading
 if (file_exists(BASE_PATH . '/vendor/autoload.php')) {
@@ -58,7 +76,8 @@ $modulesDir = BASE_PATH . '/app/modules';
 if (is_dir($modulesDir)) {
     $modules = scandir($modulesDir);
     foreach ($modules as $module) {
-        if ($module === '.' || $module === '..') continue;
+        if ($module === '.' || $module === '..')
+            continue;
         $routesFile = $modulesDir . '/' . $module . '/routes.php';
         if (file_exists($routesFile)) {
             require $routesFile;

@@ -12,7 +12,8 @@ Este documento NO contiene credenciales reales por razones de seguridad. Los val
 
 1. [Introducción](#introducción)
 2. [Diferencia entre Base de Datos Local y Remota](#diferencia-entre-base-de-datos-local-y-remota)
-3. [Requisitos Previos](#requisitos-previos)
+3. [Seleccionar Entorno (Local vs Remoto)](#seleccionar-entorno-local-vs-remoto)
+4. [Requisitos Previos](#requisitos-previos)
 4. [Configuración del Archivo .env](#configuración-del-archivo-env)
 5. [Configuración de Base de Datos Local](#configuración-de-base-de-datos-local)
 6. [Configuración de Base de Datos Remota](#configuración-de-base-de-datos-remota)
@@ -79,6 +80,30 @@ El proyecto utiliza **dos bases de datos**:
 - Demos al cliente
 - Verificación final antes de producción
 - Cuando necesites datos compartidos
+
+---
+
+## Seleccionar Entorno (Local vs Remoto)
+
+El sistema ahora cuenta con un selector fácil para cambiar entre la base de datos local y remota sin modificar archivos centrales.
+
+### Cómo cambiar de entorno
+
+1. Abre el archivo: `app/config/config.php`
+2. Busca la línea: `'db_environment' => 'local'`
+3. Cambia el valor según tus necesidades:
+
+**Para trabajar en Local (XAMPP):**
+```php
+'db_environment' => 'local'
+```
+
+**Para conectar a Remoto (BananaHosting):**
+```php
+'db_environment' => 'remote'
+```
+
+El sistema cargará automáticamente la configuración correspondiente (`database.local.php` o `database.remote.php`) basándose en esta selección.
 
 ---
 
