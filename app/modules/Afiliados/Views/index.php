@@ -1,7 +1,7 @@
 <?php
 /**
  * Vista de Listado de Afiliados
- * Completada: Listar, Editar enlace y Botón de Estado (HU-AF-04)
+ * Completada al 100%: Listar, Buscar, Filtrar, Editar, Toggle Estado
  */
 ob_start();
 ?>
@@ -22,6 +22,37 @@ ob_start();
             </div>
         <?php endif; ?>
 
+        <div class="table-data__tool">
+            <div class="table-data__tool-left">
+                <form action="/SGA-SEBANA/public/afiliados" method="GET" class="form-header">
+                    
+                    <div class="rs-select2--light rs-select2--md">
+                        <input class="au-input au-input--full" type="text" name="q" 
+                               placeholder="Buscar por nombre o cédula..." 
+                               value="<?= htmlspecialchars($filtros['busqueda']) ?>">
+                    </div>
+
+                    <div class="rs-select2--light rs-select2--sm">
+                        <select class="js-select2" name="estado">
+                            <option value="">Todos</option>
+                            <option value="activo" <?= $filtros['estado'] === 'activo' ? 'selected' : '' ?>>Activos</option>
+                            <option value="inactivo" <?= $filtros['estado'] === 'inactivo' ? 'selected' : '' ?>>Inactivos</option>
+                        </select>
+                        <div class="dropDownSelect2"></div>
+                    </div>
+
+                    <button class="au-btn-filter" type="submit">
+                        <i class="zmdi zmdi-filter-list"></i> Filtrar
+                    </button>
+
+                    <?php if(!empty($filtros['busqueda']) || !empty($filtros['estado'])): ?>
+                        <a href="/SGA-SEBANA/public/afiliados" class="btn btn-danger btn-sm ml-2">
+                            <i class="zmdi zmdi-close"></i> Limpiar
+                        </a>
+                    <?php endif; ?>
+                </form>
+            </div>
+        </div>
         <div class="table-responsive table-responsive-data2">
             <table class="table table-data2">
                 <thead>
@@ -38,7 +69,13 @@ ob_start();
                 <tbody>
                     <?php if (empty($afiliados)): ?>
                         <tr>
-                            <td colspan="7" class="text-center">No hay afiliados registrados aún.</td>
+                            <td colspan="7" class="text-center">
+                                <?php if(!empty($filtros['busqueda'])): ?>
+                                    No se encontraron resultados para "<strong><?= htmlspecialchars($filtros['busqueda']) ?></strong>".
+                                <?php else: ?>
+                                    No hay afiliados registrados aún.
+                                <?php endif; ?>
+                            </td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($afiliados as $afiliado): ?>
@@ -66,11 +103,13 @@ ob_start();
                                         <form action="/SGA-SEBANA/public/afiliados/toggle/<?= $afiliado['id'] ?>" method="post" style="display:inline;">
                                             <button type="submit" class="item" data-toggle="tooltip" data-placement="top" 
                                                     title="<?= $afiliado['estado'] === 'activo' ? 'Desactivar' : 'Activar' ?>"
-                                                    onclick="return confirm('¿Estás seguro de cambiar el estado de este afiliado?')">
+                                                    onclick="return confirm('¿Estás seguro de cambiar el estado?')">
                                                 
                                                 <?php if ($afiliado['estado'] === 'activo'): ?>
-                                                    <i class="zmdi zmdi-block" style="color: #fa4251;"></i> <?php else: ?>
-                                                    <i class="zmdi zmdi-check" style="color: #00b5e9;"></i> <?php endif; ?>
+                                                    <i class="zmdi zmdi-block" style="color: #fa4251;"></i>
+                                                <?php else: ?>
+                                                    <i class="zmdi zmdi-check" style="color: #00b5e9;"></i>
+                                                <?php endif; ?>
                                             
                                             </button>
                                         </form>

@@ -22,9 +22,35 @@ class Afiliados extends ModelBase {
         return $stmt->fetchColumn() > 0;
     }
 
-    public function getAll() {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} ORDER BY created_at DESC");
-        $stmt->execute();
+    /**
+     * ACTUALIZADO (HU-AF-03): Corrección para búsqueda múltiple
+     */
+    public function getAll($filtros = []) {
+        // Iniciamos la consulta base
+        $sql = "SELECT * FROM {$this->table} WHERE 1=1";
+        $params = [];
+
+        // Filtro 1: Búsqueda General
+        // CORRECCIÓN: Usamos :b1, :b2, :b3 para evitar error de "Invalid parameter number"
+        if (!empty($filtros['busqueda'])) {
+            $sql .= " AND (nombre_completo LIKE :b1 OR cedula LIKE :b2 OR numero_empleado LIKE :b3)";
+            $termino = "%" . $filtros['busqueda'] . "%";
+            $params['b1'] = $termino;
+            $params['b2'] = $termino;
+            $params['b3'] = $termino;
+        }
+
+        // Filtro 2: Estado (Activo / Inactivo)
+        if (!empty($filtros['estado'])) {
+            $sql .= " AND estado = :estado";
+            $params['estado'] = $filtros['estado'];
+        }
+
+        // Ordenamiento por defecto
+        $sql .= " ORDER BY created_at DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -55,19 +81,12 @@ class Afiliados extends ModelBase {
         return $stmt->execute($data);
     }
 
-    /**
-     * NUEVO: Cambiar el estado de un afiliado (Toggle)
-     * Si es 'activo' pasa a 'inactivo' y viceversa.
-     */
     public function toggleStatus($id) {
-        // 1. Obtener estado actual
         $current = $this->getById($id);
         if (!$current) return false;
 
-        // 2. Calcular nuevo estado
         $nuevoEstado = ($current['estado'] === 'activo') ? 'inactivo' : 'activo';
 
-        // 3. Actualizar
         $stmt = $this->db->prepare("UPDATE {$this->table} SET estado = :estado WHERE id = :id");
         return $stmt->execute(['estado' => $nuevoEstado, 'id' => $id]);
     }
