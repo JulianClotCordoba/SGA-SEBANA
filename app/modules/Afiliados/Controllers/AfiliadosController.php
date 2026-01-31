@@ -6,14 +6,26 @@ use App\Modules\Afiliados\Models\Afiliados;
 
 class AfiliadosController extends ControllerBase {
 
+    /**
+     * ACTUALIZADO (HU-AF-03): Recibir parámetros de búsqueda
+     */
     public function index() {
-        $modelo = new Afiliados();
-        $afiliados = $modelo->getAll();
+        // 1. Capturar filtros de la URL (GET)
+        $filtros = [
+            'busqueda' => trim($_GET['q'] ?? ''),
+            'estado'   => $_GET['estado'] ?? ''
+        ];
 
+        // 2. Consultar modelo con filtros
+        $modelo = new Afiliados();
+        $afiliados = $modelo->getAll($filtros);
+
+        // 3. Pasar datos a la vista (incluyendo los filtros para mantenerlos en los inputs)
         $data = [
-            'titulo' => 'Gestión de Afiliados',
+            'titulo'    => 'Gestión de Afiliados',
             'afiliados' => $afiliados,
-            'success' => $_GET['success'] ?? null 
+            'filtros'   => $filtros, 
+            'success'   => $_GET['success'] ?? null 
         ];
 
         $this->view('index', $data);
@@ -80,9 +92,6 @@ class AfiliadosController extends ControllerBase {
         }
     }
 
-    /**
-     * NUEVO (HU-AF-04): Cambiar estado (Activar/Desactivar)
-     */
     public function toggle($id) {
         $modelo = new Afiliados();
         
