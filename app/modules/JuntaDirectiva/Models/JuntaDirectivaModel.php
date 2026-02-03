@@ -6,34 +6,36 @@ use App\Core\ModelBase;
 class JuntaDirectivaModel extends ModelBase
 {
 
- protected $table = "junta_directiva";
-     
- public function getJuntaDirectiva()
-{
-    $sql = "SELECT 
+    protected $table = "junta_directiva";
+
+    public function getJuntaDirectiva()
+    {
+        $sql = "SELECT 
         a.nombre_completo AS nombre,
         jd.id,
         jd.cargo,
         jd.fecha_inicio,
         jd.fecha_fin,
         jd.estado,
-        COUNT(d.id) AS total_documentos
+        jd.documentos
     FROM junta_directiva jd
     INNER JOIN afiliados a ON jd.afiliado_id = a.id
-    LEFT JOIN documentos_junta d ON d.junta_id = jd.id
-    WHERE jd.estado IN ('Vigente','Suspendido')
-    GROUP BY 
-        jd.id,
-        a.nombre_completo,
-        jd.cargo,
-        jd.fecha_inicio,
-        jd.fecha_fin,
-        jd.estado";
+    WHERE jd.estado IN ('vigente','suspendido','Vigente','Suspendido')
+    ORDER BY jd.fecha_inicio DESC";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute();
-    return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-}
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        // Process results to count documents
+        foreach ($results as &$row) {
+            $docs = json_decode($row['documentos'] ?? '[]', true);
+            $row['total_documentos'] = is_array($docs) ? count($docs) : 0;
+            unset($row['documentos']); // Remove huge text blob if not needed for the list
+        }
+
+        return $results;
+    }
     public function gethistorial()
     {
         $sql = "SELECT 
@@ -43,29 +45,30 @@ class JuntaDirectivaModel extends ModelBase
         jd.fecha_inicio,
         jd.fecha_fin,
         jd.estado,
-        COUNT(d.id) AS total_documentos
+        jd.documentos
     FROM junta_directiva jd
     INNER JOIN afiliados a ON jd.afiliado_id = a.id
-    LEFT JOIN documentos_junta d ON d.junta_id = jd.id
-    WHERE jd.estado IN ('Finalizado')
-    GROUP BY 
-        jd.id,
-        a.nombre_completo,
-        jd.cargo,
-        jd.fecha_inicio,
-        jd.fecha_fin,
-        jd.estado";
-        
+    WHERE jd.estado IN ('finalizado','Finalizado')
+    ORDER BY jd.fecha_inicio DESC";
+
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach ($results as &$row) {
+            $docs = json_decode($row['documentos'] ?? '[]', true);
+            $row['total_documentos'] = is_array($docs) ? count($docs) : 0;
+            unset($row['documentos']);
+        }
+        return $results;
     }
 
- 
-    
-    public function createMiembroJunta($afiliado_id, $cargo, $estado,$fecha_inicio, $fecha_fin, $periodo,$responsabilidades,$observaciones,$fecha_actualizacion){     
-    $sql = "INSERT INTO {$this->table}(
+
+
+    public function createMiembroJunta($afiliado_id, $cargo, $estado, $fecha_inicio, $fecha_fin, $periodo, $responsabilidades, $observaciones, $fecha_actualizacion)
+    {
+        $sql = "INSERT INTO {$this->table}(
             afiliado_id,
             cargo,
             fecha_inicio,
@@ -74,38 +77,45 @@ class JuntaDirectivaModel extends ModelBase
             estado,
             responsabilidades,
             observaciones,
-            fecha_actualizacion 
+            fecha_actualizacion,
+            documentos
 
             )VALUES(
             :afiliado_id, :cargo, :fecha_inicio, :fecha_fin,:periodo,:estado,:responsabilidades,
-            :observaciones, :fecha_actualizacion)"; 
+            :observaciones, :fecha_actualizacion, :documentos)";
 
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':afiliado_id', $afiliado_id);
-            $stmt->bindParam(':cargo',$cargo);
-            $stmt->bindParam(':fecha_inicio', $fecha_inicio);
-            $stmt->bindParam(':fecha_fin', $fecha_fin);
-            $stmt->bindParam(':periodo', $periodo);
-            $stmt->bindParam(':estado', $estado);
-            $stmt->bindParam(':responsabilidades', $responsabilidades);
-            $stmt->bindParam(':observaciones',$observaciones);
-            $stmt->bindParam(':fecha_actualizacion',$fecha_actualizacion);
+        $emptyDocs = json_encode([]);
+        $estado = strtolower($estado); // Normalize to lower case
 
-            $stmt->execute();
-            return $this->db->lastInsertId(); 
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':afiliado_id', $afiliado_id);
+        $stmt->bindParam(':cargo', $cargo);
+        $stmt->bindParam(':fecha_inicio', $fecha_inicio);
+        $stmt->bindParam(':fecha_fin', $fecha_fin);
+        $stmt->bindParam(':periodo', $periodo);
+        $stmt->bindParam(':estado', $estado);
+        $stmt->bindParam(':responsabilidades', $responsabilidades);
+        $stmt->bindParam(':observaciones', $observaciones);
+        $stmt->bindParam(':fecha_actualizacion', $fecha_actualizacion);
+        $stmt->bindParam(':documentos', $emptyDocs);
+
+        $stmt->execute();
+        return $this->db->lastInsertId();
     }
-     
-     
-    public function getAfiliados(){
-      $sql = "SELECT id, nombre_completo, cedula FROM afiliados WHERE estado = 'activo'";
-      $stmt = $this->db->prepare($sql);
-      $stmt->execute();
-      return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-   }
 
 
-  public function updateMiembroJunta($id,$cargo,$fecha_inicio,$fecha_fin,$periodo,$estado,$responsabilidades,$observaciones ){
-  $sql="UPDATE {$this->table}
+    public function getAfiliados()
+    {
+        $sql = "SELECT id, nombre_completo, cedula FROM afiliados WHERE estado = 'activo'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
+    public function updateMiembroJunta($id, $cargo, $fecha_inicio, $fecha_fin, $periodo, $estado, $responsabilidades, $observaciones)
+    {
+        $sql = "UPDATE {$this->table}
     set cargo = :cargo,
     fecha_inicio = :fecha_inicio,
     fecha_fin = :fecha_fin,
@@ -115,106 +125,199 @@ class JuntaDirectivaModel extends ModelBase
     observaciones = :observaciones 
     WHERE id = :id";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindParam(':id',$id);
-    $stmt->bindParam(':cargo',$cargo);
-    $stmt->bindParam(':fecha_inicio',$fecha_inicio);
-    $stmt->bindParam(':fecha_fin',$fecha_fin);
-    $stmt->bindParam(':periodo',$periodo);
-    $stmt->bindParam(':estado',$estado);
-    $stmt->bindParam(':responsabilidades',$responsabilidades);
-    $stmt->bindParam(':observaciones',$observaciones);
-    return $stmt->execute();
-   } 
+        $estado = strtolower($estado); // Normalize
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':cargo', $cargo);
+        $stmt->bindParam(':fecha_inicio', $fecha_inicio);
+        $stmt->bindParam(':fecha_fin', $fecha_fin);
+        $stmt->bindParam(':periodo', $periodo);
+        $stmt->bindParam(':estado', $estado);
+        $stmt->bindParam(':responsabilidades', $responsabilidades);
+        $stmt->bindParam(':observaciones', $observaciones);
+        return $stmt->execute();
+    }
 
 
-public function updateEstadoFinalizar($id, $estado)
-{
-    $sql="UPDATE {$this->table}
+    public function updateEstadoFinalizar($id, $estado)
+    {
+        $sql = "UPDATE {$this->table}
     set estado = :estado
-    WHERE id = :id AND estado = 'Vigente'";
+    WHERE id = :id AND estado = 'vigente'";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindParam(':id',$id);
-    $stmt->bindParam(':estado',$estado);
-    return $stmt->execute();
+        $estado = strtolower($estado);
 
-}
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':estado', $estado);
+        return $stmt->execute();
 
-   
-public function updateEstadoActivar($id, $estado)
-{
-    $sql="UPDATE {$this->table}
+    }
+
+
+    public function updateEstadoActivar($id, $estado)
+    {
+        $sql = "UPDATE {$this->table}
     set estado = :estado
     WHERE id = :id AND estado = 'finalizado'";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindParam(':id',$id);
-    $stmt->bindParam(':estado',$estado);
-    return $stmt->execute();
+        $estado = strtolower($estado);
 
-}
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':estado', $estado);
+        return $stmt->execute();
+
+    }
 
 
-public function getMiembroById($id)
-{
-   $sql = "SELECT jd.*, a.nombre_completo AS nombre
+    public function getMiembroById($id)
+    {
+        $sql = "SELECT jd.*, a.nombre_completo AS nombre
            FROM {$this->table} jd
            INNER JOIN afiliados a ON jd.afiliado_id = a.id
            WHERE jd.id = :id";
 
-    $stmt = $this->db->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    return $stmt->fetch(\PDO::FETCH_ASSOC);
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+
+
+
+
+
+    public function insertDocumento($juntaId, $archivo, $original)
+    {
+        // 1. Get current documents
+        $sql = "SELECT documentos FROM {$this->table} WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$juntaId]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        $docs = [];
+        if ($result && !empty($result['documentos'])) {
+            $docs = json_decode($result['documentos'], true);
+            if (!is_array($docs)) {
+                $docs = [];
+            }
+        }
+
+        // 2. Add new document
+        $newDoc = [
+            'id' => uniqid(), // Internal ID for the document
+            'nombre_archivo' => $archivo,
+            'nombre_original' => $original,
+            'fecha_subida' => date('Y-m-d H:i:s')
+        ];
+        $docs[] = $newDoc;
+
+        // 3. Update table
+        $jsonDocs = json_encode($docs);
+        $updateSql = "UPDATE {$this->table} SET documentos = ? WHERE id = ?";
+        return $this->db->prepare($updateSql)->execute([$jsonDocs, $juntaId]);
+    }
+
+
+    public function getDocumentos($juntaId)
+    {
+        $sql = "SELECT documentos FROM {$this->table} WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$juntaId]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        $finalDocs = [];
+        if ($result && !empty($result['documentos'])) {
+            $docs = json_decode($result['documentos'], true);
+            if (is_array($docs)) {
+                foreach ($docs as $doc) {
+                    // Return a structure compatible with what the view/controller might expect
+                    // Construct a composite ID so we can identify this doc later
+                    $doc['id'] = $juntaId . '_' . $doc['id'];
+                    $finalDocs[] = $doc;
+                }
+            }
+        }
+        return $finalDocs;
+    }
+
+    public function getDocumentoById($id)
+    {
+        // ID is likely "juntaId_docUniqueId"
+        $parts = explode('_', $id);
+        if (count($parts) < 2) {
+            return null; // Invalid ID format
+        }
+
+        $juntaId = $parts[0];
+        $docId = $parts[1]; // The rest is the unique ID (uniqid is distinct enough) but might contain more chars if we used something else. uniqid is alphanumeric.
+
+        // If uniqid contains underscores (it shouldn't usually, but let's be safe), we better rely on the first part being the ID. 
+        // Actually, uniqid() doesn't contain underscores.
+
+        $sql = "SELECT documentos FROM {$this->table} WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$juntaId]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($result && !empty($result['documentos'])) {
+            $docs = json_decode($result['documentos'], true);
+            if (is_array($docs)) {
+                foreach ($docs as $doc) {
+                    if ($doc['id'] === $docId) {
+                        // Start of fix: Ensure we return the ID expected by the controller (the composite one) so delete links work
+                        $doc['id'] = $id; // Return the composite ID
+                        return $doc;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function deleteDocumento($id)
+    {
+        // ID is "juntaId_docUniqueId"
+        $parts = explode('_', $id);
+        if (count($parts) < 2) {
+            return false;
+        }
+
+        $juntaId = $parts[0];
+        $docId = $parts[1];
+
+        $sql = "SELECT documentos FROM {$this->table} WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$juntaId]);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($result && !empty($result['documentos'])) {
+            $docs = json_decode($result['documentos'], true);
+            if (is_array($docs)) {
+                $newDocs = [];
+                $found = false;
+                foreach ($docs as $doc) {
+                    if ($doc['id'] === $docId) {
+                        $found = true;
+                        // Do not add to $newDocs
+                        continue;
+                    }
+                    $newDocs[] = $doc;
+                }
+
+                if ($found) {
+                    $jsonDocs = json_encode($newDocs);
+                    $updateSql = "UPDATE {$this->table} SET documentos = ? WHERE id = ?";
+                    return $this->db->prepare($updateSql)->execute([$jsonDocs, $juntaId]);
+                }
+            }
+        }
+        return false;
+    }
+
+
 }
-
-
-
-
-
-
-public function insertDocumento($juntaId, $archivo, $original)
-{
-    $sql = "INSERT INTO documentos_junta
-            (junta_id, nombre_archivo, nombre_original)
-            VALUES(?,?,?)";
-    
-    return $this->db->prepare($sql)->execute([$juntaId, $archivo, $original]);
-}
-
-
-public function getDocumentos($juntaId)
-{
-    $sql = "SELECT * FROM documentos_junta WHERE junta_id = ?";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([$juntaId]);
-    return $stmt->fetchAll();
-}
-
-public function getDocumentoById($id)
-{
-    $sql = "SELECT * FROM documentos_junta WHERE id = ?";
-    $stmt = $this->db->prepare($sql);
-    $stmt->execute([$id]);
-    return $stmt->fetch(\PDO::FETCH_ASSOC);
-}
-
-public function deleteDocumento($id){
-    $sql = "DELETE FROM documentos_junta WHERE id= ?";
-    return $this->db->prepare($sql)->execute([$id]);
-}
-
-
-
- 
-}
-
-
-
-
-
-
-
-
-

@@ -14,12 +14,12 @@ ob_start();
         </div>
 
         <form action="/SGA-SEBANA/public/junta/edit/<?= $miembro['id'] ?? '' ?>" method="post"
-             enctype="multipart/form-data" class="form-horizontal">
+            enctype="multipart/form-data" class="form-horizontal">
 
-    
+
             <div class="card">
                 <div class="card-header">
-                   <strong><?= htmlspecialchars($miembro['nombre'] ?? '') ?></strong>
+                    <strong><?= htmlspecialchars($miembro['nombre'] ?? '') ?></strong>
                 </div>
                 <div class="card-body card-block">
 
@@ -27,15 +27,15 @@ ob_start();
                         <div class="col-md-6">
                             <label class="form-control-label">Cargo</label>
                             <input type="text" name="cargo" class="form-control"
-                                   value="<?= htmlspecialchars($miembro['cargo'] ?? '') ?>" required>
+                                value="<?= htmlspecialchars($miembro['cargo'] ?? '') ?>" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-control-label">Estado</label>
                             <select name="estado" class="form-control">
-                                <option value="vigente" <?= ($miembro['estado'] ?? '')=='vigente'?'selected':'' ?>>Vigente</option>
-                                <option value="finalizado" <?= ($miembro['estado'] ?? '')=='finalizado'?'selected':'' ?>>Finalizado</option>
-                                <option value="suspendido" <?= ($miembro['estado'] ?? '')=='suspendido'?'selected':'' ?>>Suspendido</option>
+                                <option value="vigente" <?= (strtolower($miembro['estado'] ?? '') == 'vigente') ? 'selected' : '' ?>>Vigente</option>
+                                <option value="finalizado" <?= (strtolower($miembro['estado'] ?? '') == 'finalizado') ? 'selected' : '' ?>>Finalizado</option>
+                                <option value="suspendido" <?= (strtolower($miembro['estado'] ?? '') == 'suspendido') ? 'selected' : '' ?>>Suspendido</option>
                             </select>
                         </div>
                     </div>
@@ -44,19 +44,19 @@ ob_start();
                         <div class="col-md-4">
                             <label class="form-control-label">Fecha Inicio</label>
                             <input type="date" name="fecha_inicio" class="form-control"
-                                   value="<?= $miembro['fecha_inicio'] ?? '' ?>">
+                                value="<?= $miembro['fecha_inicio'] ?? '' ?>">
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-control-label">Fecha Fin</label>
                             <input type="date" name="fecha_fin" class="form-control"
-                                   value="<?= $miembro['fecha_fin'] ?? '' ?>">
+                                value="<?= $miembro['fecha_fin'] ?? '' ?>">
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-control-label">Periodo</label>
                             <input type="text" name="periodo" class="form-control"
-                                   value="<?= htmlspecialchars($miembro['periodo'] ?? '') ?>">
+                                value="<?= htmlspecialchars($miembro['periodo'] ?? '') ?>">
                         </div>
                     </div>
 
@@ -70,25 +70,25 @@ ob_start();
                 </div>
                 <div class="card-body card-block">
                     <textarea name="responsabilidades" rows="3"
-                              class="form-control"><?= htmlspecialchars($miembro['responsabilidades'] ?? '') ?></textarea>
+                        class="form-control"><?= htmlspecialchars($miembro['responsabilidades'] ?? '') ?></textarea>
                 </div>
             </div>
 
             <div class="card">
-               <div class="col-md-12">
+                <div class="col-md-12">
                     <label class="form-control-label">Documentos actuales</label>
 
-                    <?php if(!empty($documentos)): ?>
+                    <?php if (!empty($documentos)): ?>
                         <ul>
-                            <?php foreach($documentos as $doc): ?>
+                            <?php foreach ($documentos as $doc): ?>
                                 <li>
                                     <a href="/SGA-SEBANA/public/junta/ver-documento/<?= $doc['id'] ?? '' ?>" target="_blank">
                                         <?= htmlspecialchars($doc['nombre_original'] ?? '') ?>
                                     </a>
 
                                     <a href="/SGA-SEBANA/public/junta/eliminar-documento/<?= $doc['id'] ?? '' ?>"
-                                       onclick="return confirm('¿Eliminar este documento?')"
-                                       href="#" class="text-danger"> <i class="zmdi zmdi-delete zmdi-hc-sm"></i> </a>
+                                        onclick="return confirm('¿Eliminar este documento?')" href="#" class="text-danger"> <i
+                                            class="zmdi zmdi-delete zmdi-hc-sm"></i> </a>
 
                                 </li>
                             <?php endforeach; ?>
@@ -109,12 +109,12 @@ ob_start();
                         <div class="col-md-6">
                             <label class="form-control-label">Documentos</label>
                             <input type="text" name="documentos" class="form-control"
-                                   value="<?= htmlspecialchars($miembro['documentos'] ?? '') ?>">
+                                value="<?= htmlspecialchars($miembro['documentos'] ?? '') ?>">
                         </div>
                         <div class="col-md-6">
                             <label class="form-control-label">Observaciones</label>
                             <input type="text" name="observaciones" class="form-control"
-                                   value="<?= htmlspecialchars($miembro['observaciones'] ?? '') ?>">
+                                value="<?= htmlspecialchars($miembro['observaciones'] ?? '') ?>">
                         </div>
                     </div>
 
