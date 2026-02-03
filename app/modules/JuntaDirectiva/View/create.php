@@ -12,9 +12,9 @@ ob_start();
         <select name="afiliado_id" class="form-control" required>
             <option value="">Seleccione un afiliado</option>
             <?php foreach ($afiliados as $a): ?>
-              <option value="<?= $a['id'] ?>">
-                <?= $a['nombre_completo'] ?> - <?= $a['cedula'] ?>
-              </option>
+                <option value="<?= $a['id'] ?>">
+                    <?= $a['nombre_completo'] ?> - <?= $a['cedula'] ?>
+                </option>
             <?php endforeach; ?>
         </select>
     </div>
@@ -26,7 +26,11 @@ ob_start();
 
     <div class="form-group mb-3">
         <label>Estado</label>
-        <input type="text" name="estado" class="form-control" required>
+        <select name="estado" class="form-control" required>
+            <option value="vigente">Vigente</option>
+            <option value="suspendido">Suspendido</option>
+            <option value="finalizado">Finalizado</option>
+        </select>
     </div>
 
     <div class="form-group mb-3">
