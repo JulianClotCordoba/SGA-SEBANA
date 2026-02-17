@@ -15,7 +15,7 @@ ob_start();
         <p><strong>Motivo:</strong> <?= htmlspecialchars($afiliado['motivo_baja']) ?></p>
         <p><strong>Tipo Baja:</strong> <?= htmlspecialchars($afiliado['tipo_baja']) ?></p>
         <p><strong>Estado:</strong> <?= htmlspecialchars($afiliado['estado']) ?></p>
-        <p><strong>Observaciones:</strong> <?= htmlspecialchars($afiliado['observaciones'] ?? 'N/A') ?></p>
+        
       </div>
       <div class="card-footer text-center">
         <a href="/SGA-SEBANA/public/ReporteDeExclusionDeAfiliado/pdf/<?= $afiliado['id'] ?>" class="btn btn-danger">

@@ -21,7 +21,7 @@ body { font-family: Arial, sans-serif; margin: 20px; }
     <p><strong>Motivo:</strong> <?= htmlspecialchars($afiliado['motivo_baja']) ?></p>
     <p><strong>Tipo Baja:</strong> <?= htmlspecialchars($afiliado['tipo_baja']) ?></p>
     <p><strong>Estado:</strong> <?= htmlspecialchars($afiliado['estado']) ?></p>
-    <p><strong>Observaciones:</strong> <?= htmlspecialchars($afiliado['observaciones'] ?? 'N/A') ?></p>
+    
   </div>
   <div class="footer">
     Fecha de Emisión: <?= date('d/m/Y') ?> • Versión Digital
